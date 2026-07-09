@@ -31,6 +31,7 @@
 | 2026-07-09 | Phase 0 | 新增已整理資料頁籤     | 將整理草稿 state 提到首頁 App 共用，新增「已整理資料」檢視頁，並把預設嚴重程度改為高                                                      | 採用        | 這是前端暫存的整理草稿檢視，不新增正式資料檔，也不把草稿標示成已確認資料                                      | `src/app/App.tsx`, `src/features/phase-0/Phase0ArrangedDataPanel.tsx`, `src/features/phase-0/Phase0Workbench.tsx`                       |
 | 2026-07-09 | Phase 0 | 調整排序與 AI 敏感度   | 降低 AI 可信賴度規則的敏感度，並讓已整理資料依嚴重程度高、中、低排序                                                                      | 採用        | AI 可信賴度仍是提示，不把待確認資料變成事實；排序只協助掃描，不代表真實救災優先順序                           | `src/features/phase-0/Phase0Workbench.tsx`, `src/features/phase-0/Phase0ArrangedDataPanel.tsx`, `src/features/phase-0/phase0-drafts.ts` |
 | 2026-07-09 | Phase 0 | 補資料品質觀察         | 記錄模糊地點、轉述來源、過期資訊、同意與安全風險                                                                                          | 採用        | 這些觀察來自原文與課程規則，不補外部真實資料                                                                  | `docs/phase0-observations.md`                                                                                                           |
+| 2026-07-09 | Release 01 | 模擬三個 persona 訪談 | 依據 Phase 0 prototype 與 persona 規格，產出回報者、資訊整理者與行動者的固定格式回饋草稿 | 採用        | 這些回饋是使用者視角意見，不直接改變程式或資料格式；後續仍由人類決定 v1 需求取捨 | `docs/interview-notes.md`, `docs/interview-summary.md`, `docs/decisions.md` |
 
 ## 範例
 
