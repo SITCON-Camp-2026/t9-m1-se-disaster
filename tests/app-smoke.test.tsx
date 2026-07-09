@@ -18,6 +18,9 @@ describe("App", () => {
       screen.getByRole("button", { name: "整理工作台" }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole("button", { name: "已整理資料" }),
+    ).toBeInTheDocument();
+    expect(
       screen.queryByRole("button", { name: "通報" }),
     ).not.toBeInTheDocument();
     expect(
@@ -45,17 +48,77 @@ describe("App", () => {
     expect(screen.getAllByText("未查核").length).toBeGreaterThan(0);
   });
 
-  it("keeps draft CRUD as learner work instead of starter output", () => {
+  it("supports minimal editable phase 0 drafts", () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: "整理工作台" }));
 
-    expect(screen.getByText("尚未建立整理草稿")).toBeInTheDocument();
+    expect(screen.getByText("M-001 的候選整理")).toBeInTheDocument();
+    expect(screen.getByText(/已產生 6 筆可編輯整理草稿/)).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("案件地點"), {
+      target: { value: "老雜貨店後面" },
+    });
+
+    expect(screen.getByDisplayValue("老雜貨店後面")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("所需人力"), {
+      target: { value: "10" },
+    });
+    fireEvent.click(screen.getByLabelText("只知道大致人數"));
+
+    expect(screen.getByDisplayValue("10")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("嚴重程度"), {
+      target: { value: "high" },
+    });
+
+    expect(screen.getByText("AI 可信賴度")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "刪除草稿" }));
     expect(
-      screen.getByText(/請 agent 加上建立、編輯、刪除或重設整理草稿/),
+      screen.getByRole("button", { name: "建立草稿" }),
     ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "重設整理草稿" }));
     expect(
-      screen.queryByText(/已產生 \d+ 筆安全邊界草稿/),
-    ).not.toBeInTheDocument();
+      screen.getByRole("button", { name: "刪除草稿" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows arranged draft data with high severity by default", () => {
+    const { container } = render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: "整理工作台" }));
+    fireEvent.change(screen.getByLabelText("嚴重程度"), {
+      target: { value: "low" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /M-002/ }));
+    fireEvent.change(screen.getByLabelText("嚴重程度"), {
+      target: { value: "medium" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "已整理資料" }));
+
+    expect(
+      screen.getByRole("heading", { name: "已整理資料" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("6 筆草稿")).toBeInTheDocument();
+    expect(screen.getAllByText("嚴重程度：高").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("不能直接變成任務").length).toBeGreaterThan(0);
+
+    const severityLabels = Array.from(
+      container.querySelectorAll(".severity-badge"),
+    ).map((item) => item.textContent);
+
+    expect(severityLabels).toEqual([
+      "嚴重程度：高",
+      "嚴重程度：高",
+      "嚴重程度：高",
+      "嚴重程度：高",
+      "嚴重程度：中",
+      "嚴重程度：低",
+    ]);
   });
 });

@@ -1,9 +1,12 @@
 // Phase 0 only. This is not the formal data contract.
 export type Phase0PossibleKind =
   | "help_request_candidate"
+  | "resource_candidate"
   | "site_status_candidate"
   | "task_candidate"
   | "assignment_candidate"
+  | "safety_or_road_candidate"
+  | "wellbeing_check_candidate"
   | "announcement_candidate"
   | "unknown";
 

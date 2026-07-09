@@ -2,12 +2,15 @@ import { StatusBadge } from "../../components/StatusBadge";
 import type { Phase0JudgementDraft, Phase0MessyRecord } from "./phase0-types";
 
 const kindLabels: Record<Phase0JudgementDraft["possibleKind"], string> = {
-  help_request_candidate: "求助候選",
-  site_status_candidate: "地點狀態候選",
-  task_candidate: "任務候選",
-  assignment_candidate: "人員指派候選",
-  announcement_candidate: "公告候選",
-  unknown: "候選類型待判斷",
+  help_request_candidate: "求助資訊",
+  resource_candidate: "物資或資源資訊",
+  site_status_candidate: "地點狀態資訊",
+  task_candidate: "可能的任務資訊",
+  assignment_candidate: "人力或指派資訊",
+  safety_or_road_candidate: "安全或道路資訊",
+  wellbeing_check_candidate: "安否或狀況確認資訊",
+  announcement_candidate: "公告或轉傳公告資訊",
+  unknown: "資訊類型待判斷",
 };
 
 const confidenceLabels: Record<Phase0JudgementDraft["confidence"], string> = {
@@ -46,13 +49,13 @@ export function Phase0JudgementCard({
       </div>
 
       <p>
-        這張卡只保留保守的安全邊界，不是 agent 對這筆資料的整理答案。請讓 coding
-        agent 實作可建立、編輯與刪除的整理草稿。
+        這張卡只保留保守的安全邊界，不是 agent
+        對這筆資料的整理答案；下方草稿仍需人工確認。
       </p>
 
       <dl className="judgement-summary">
         <div>
-          <dt>候選類型</dt>
+          <dt>資訊類型</dt>
           <dd>{kindLabels[judgement.possibleKind]}</dd>
         </div>
         <div>

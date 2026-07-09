@@ -1,15 +1,18 @@
 import { useState } from "react";
 import messyReports from "../fixtures/phase-0/messy-reports.json";
 import { EmptyState } from "../components/EmptyState";
+import { Phase0ArrangedDataPanel } from "../features/phase-0/Phase0ArrangedDataPanel";
+import { createInitialDrafts } from "../features/phase-0/phase0-drafts";
 import { Phase0RawInfoPanel } from "../features/phase-0/Phase0RawInfoPanel";
 import { Phase0Workbench } from "../features/phase-0/Phase0Workbench";
 import type { Phase0MessyRecord } from "../features/phase-0/phase0-types";
 
-type TabKey = "raw" | "workbench";
+type TabKey = "raw" | "workbench" | "arranged";
 
 const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "raw", label: "原始資訊" },
   { key: "workbench", label: "整理工作台" },
+  { key: "arranged", label: "已整理資料" },
 ];
 
 const phase0Records = messyReports satisfies Phase0MessyRecord[];
@@ -18,6 +21,9 @@ export function App() {
   const [activeTab, setActiveTab] = useState<TabKey>("raw");
   const [selectedRecordId, setSelectedRecordId] = useState(
     phase0Records[0]?.id ?? "",
+  );
+  const [drafts, setDrafts] = useState(() =>
+    createInitialDrafts(phase0Records),
   );
 
   function selectForWorkbench(recordId: string) {
@@ -58,12 +64,16 @@ export function App() {
             selectedRecordId={selectedRecordId}
             onSelect={selectForWorkbench}
           />
-        ) : (
+        ) : activeTab === "workbench" ? (
           <Phase0Workbench
             records={phase0Records}
             selectedRecordId={selectedRecordId}
             onSelect={setSelectedRecordId}
+            drafts={drafts}
+            setDrafts={setDrafts}
           />
+        ) : (
+          <Phase0ArrangedDataPanel records={phase0Records} drafts={drafts} />
         )}
       </section>
     </main>
